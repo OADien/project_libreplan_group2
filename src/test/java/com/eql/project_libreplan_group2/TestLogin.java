@@ -2,8 +2,10 @@ package com.eql.project_libreplan_group2;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
 
 public class TestLogin {
 	
@@ -26,6 +28,8 @@ public class TestLogin {
 	@Test
 	public void testLogin() {
 		driver.get(url);
+		PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
+		PageCalendar mainPage = pageLogin.login(driver, "admin", "admin");
 	}
 
 }
