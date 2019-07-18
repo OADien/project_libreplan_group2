@@ -1,5 +1,7 @@
 package com.eql.project_libreplan_group2;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,30 +16,34 @@ public class Utils {
 	private static final String PASSWORD = "admin";
 
 	public static WebDriver chooseBrowser(String browser) {
+		WebDriver driver;
 		switch (browser) {
 		case "firefox":
 			System.setProperty("webdriver.gecko.driver", "src/main/resources/drivers/geckodriver.exe");
-			return new FirefoxDriver();
-
+			driver = new FirefoxDriver();
+			break;
 		case "chrome":
 			System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
-			return new ChromeDriver();
-
+			driver = new ChromeDriver();
+			break;
 		case "ie":
 			System.setProperty("webdriver.ie.driver", "src/main/resources/drivers/IEDriverServer.exe");
-			return new InternetExplorerDriver();
+			driver = new InternetExplorerDriver();
+			break;
 		default:
 			System.setProperty("webdriver.gecko.driver", "src/main/resources/drivers/geckodriver.exe");
-			return new FirefoxDriver();
+			driver = new FirefoxDriver();
 		}
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		return driver;
 	}
 
-	public static PageCalendar login(WebDriver driver) {
+	public static PageMain login(WebDriver driver) {
 		driver.get(URL);
 		PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
 		return pageLogin.login(driver, USERNAME, PASSWORD);
 	}
-	
+
 	public static void renseignerChamp(WebElement field, String str) {
 		field.clear();
 		field.sendKeys(str);

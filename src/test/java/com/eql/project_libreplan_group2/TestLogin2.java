@@ -18,9 +18,15 @@ public class TestLogin2 {
 		driver.quit();
 	}
 
-	@Test
+	//@Test
 	public void testLogin() {
-		PageCalendar pageCalendar = Utils.login(driver);
+		PageMain pageMain = Utils.login(driver);
+	}
+	
+	@Test
+	public void testSection() {
+		PageMain pageMain = Utils.login(driver);
+		pageMain.clickMenu(driver, "Ressources", "Participants");
 	}
 
 }

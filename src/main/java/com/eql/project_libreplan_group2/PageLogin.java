@@ -19,13 +19,13 @@ public class PageLogin {
 	private WebElement loginButton;
 	
 	
-	public PageCalendar login(WebDriver driver, String uname, String pwd) {
+	public PageMain login(WebDriver driver, String uname, String pwd) {
 		username.clear();
 		username.sendKeys(uname);
 		password.clear();
 		password.sendKeys(pwd);
 		loginButton.click();
-		return PageFactory.initElements(driver, PageCalendar.class);
+		return PageFactory.initElements(driver, PageMain.class);
 	}
 	
 

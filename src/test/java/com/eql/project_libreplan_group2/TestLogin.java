@@ -29,7 +29,7 @@ public class TestLogin {
 	public void testLogin() {
 		driver.get(url);
 		PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
-		PageCalendar mainPage = pageLogin.login(driver, "admin", "admin");
+		PageMain mainPage = pageLogin.login(driver, "admin", "admin");
 	}
 
 }
