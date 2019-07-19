@@ -20,7 +20,9 @@ public class TestCalendar {
 	WebDriver driver;
 	String browser = "chrome";
 	String name = "Calendrier - Test 1";
-	String name_calendar = "Calendrier - Test Calendrier Dérivé";
+	String name_calendar_child = "Calendrier - Test Calendrier Dérivé";
+	private Object[] expected;
+	//String name_calendar_child = "Calendrier - Test Calendrier Dérivé";
 	@Before
 	public void setup(){
 		System.out.println("\n@Before");
@@ -189,7 +191,7 @@ public class TestCalendar {
 		    System.out.println("WARNING : calendrier existe =========> done");
 		    
 		    //ACTION / Créer un calendrier dérivé : remplir [Nom] / case code cochée / [Enregistré et continuer
-		    Utils.renseignerChamp(field_nom, name_calendar);
+		    Utils.renseignerChamp(field_nom, name_calendar_child);
 		     
 		    Utils.checkBoxCode(box_code);
 		    System.out.println("La case [Générer le code est cochée =========> done");
@@ -215,8 +217,40 @@ public class TestCalendar {
 			System.out.println("[Liste de calendriers] =========> done");
 			
 			//VERIFICATION : le calendrier "Calendrier - Test Calendrier Dérivé" est affiché en tant que sous-calendrier du calendrier "Calendrier - Test 1".
-			 
-		    
+			 List<WebElement> listCalendar_child = driver.findElements(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr"));
+			 	assertFalse(listCalendar_child.isEmpty());
+			 	System.out.println("Le nombre de ligne = "+ listCalendar_child.size());
+				driver.findElement(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[1]")).isDisplayed();
+				int i=0;
+				WebElement ligne;
+				for (WebElement e : listCalendar_child) {
+					WebElement title=e.findElement(By.xpath("td[1]"));
+					System.out.println(title.getText());
+					if(name.equals(title.getText())){
+						name_calendar_child.equals(title.getText());
+						
+						ligne=e;
+						break;
+					}
+				i++;
+				}
+				System.out.println(listCalendar_child.get(i+1).getText());
+				
+
+				WebElement field_child = driver.findElement(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[2]/descendant::span[2]"));
+				if (field_child.isDisplayed()) {
+					System.out.println("Calendrier - Test Calendrier Dérivé existe");
+				}
+				
+				//ACTION : Affichage du calendrier dérivé ==>button fold out = boutton déroulant
+				WebElement button_fold_out = driver.findElement(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[1]/descendant::span[1]"));
+				button_fold_out.click();
+				
+				//VERIFICATION : Calendrier - Test Calendrier Dérivé" n'est plus affiché
+				assertFalse(field_child.isDisplayed());
+				
+				//ACTION : Créer un calendrier par copie
+					
 	}
 
 }
