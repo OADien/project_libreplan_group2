@@ -26,7 +26,7 @@ public class TestTasks {
 		pageMain.clickOnProjectsList();
 		PageProject pageProject = PageFactory.initElements(driver, PageProject.class);
 		pageProject.clickOnProject("PROJET_TEST1");
-		pageMain.testProjectTasks();
+		pageMain.testProjectsListsDisplay();
 		pageMain.createTask("Tache1-P1", "5");
 		pageMain.createTask("Tache2-P1", "10");
 		pageMain.createTask("Tache3-P1", "20");
@@ -47,7 +47,8 @@ public class TestTasks {
 		pageMain.editTask("Tache4-P1", "T4", null, 5);
 		Thread.sleep(200);
 		pageMain.saveProject();
-		pageMain.gotoProjectPlanning();
+		PageTasks pageTasks = pageMain.gotoProjectPlanning(driver);
+		pageTasks.test();
 	}
 
 }

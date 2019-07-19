@@ -15,6 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -159,12 +160,6 @@ public class PageMain {
 	@FindBy(xpath="//td[.='Planification de projet']")
 	private WebElement buttonProjectPlanning;
 	
-	@FindBy(xpath="//div[contains(@class, 'standard-task')]")
-	private List<WebElement> tasksDateBars;
-	
-	@FindBy(xpath="//div[@class='deadline']")
-	private List<WebElement> tasksDeadlineBars;
-	
 //	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
 //	private WebElement 
 //	
@@ -307,7 +302,7 @@ public class PageMain {
 		buttonProjectsList.click();
 	}
 	
-	public void testProjectTasks() {
+	public void testProjectsListsDisplay() {
 		Assert.assertEquals("WBS (tâches)", selectedTab.getText().trim());
 		Assert.assertEquals("DEBUT Calendrier Détail du projet PROJET_TEST1", breadcrumb.getText().trim().replace("\r", "").replace("\n", " "));
 	}
@@ -390,11 +385,10 @@ public class PageMain {
 		Thread.sleep(100);
 	}
 	
-	public void gotoProjectPlanning() {
+	public PageTasks gotoProjectPlanning(WebDriver driver) {
 		buttonProjectPlanning.click();
 		//check that bars are visible on the planning
-		Assert.assertFalse(tasksDateBars.isEmpty());
-		Assert.assertFalse(tasksDeadlineBars.isEmpty());
+		return PageFactory.initElements(driver, PageTasks.class);
 	}
 
 }
