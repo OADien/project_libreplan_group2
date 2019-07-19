@@ -103,8 +103,72 @@ public class PageMain {
 	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='Annuler']")
 	private WebElement cancelModalButtonAnnuler;
 	
+	@FindBy(xpath="//td[.='Liste des projets']")
+	private WebElement buttonProjectsList;
 	
 	
+	@FindBy(xpath="//tr[@class='ruta']")
+	private WebElement breadcrumb;
+	
+	@FindBy(xpath="//span[.='Nouvelle tâche']/following::input[1]")
+	private WebElement taskTitle;
+	
+	@FindBy(xpath="//span[.='Heures']/following::input[1]")
+	private WebElement taskHour;
+	
+	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
+	private WebElement  buttonAddTask;
+	
+	@FindBy(xpath="//span[@title='Fully scheduled']")
+	private WebElement  buttonTaskScheduling;
+	
+	@FindBy(xpath="//span[@title='Déprogrammé']")
+	private WebElement  buttonTaskUnplanned;
+	
+	@FindBy(xpath="//tr[contains(@class, 'z-treerow')]")
+	private List<WebElement> tasks;
+	
+	@FindBy(xpath="//span[@title='Descendre la tâche sélectionnée']")
+	private WebElement buttonTaskDown;
+	
+	@FindBy(xpath="//span[@title='Remonter la tâche sélectionnée']")
+	private WebElement buttonTaskUp;
+	
+	@FindBy(xpath="//span[.='Code ']/ancestor::tr[1]/descendant::input[1]")
+	private WebElement inputTaskCode;
+	
+	@FindBy(xpath="//span[.='Date de début']/ancestor::tr[1]/descendant::i[contains(@class, 'z-datebox-btn')]")
+	private WebElement buttonTaskDatedebut;
+	
+	@FindBy(xpath="//span[.='Echéance']/ancestor::tr[1]/descendant::i[contains(@class, 'z-datebox-btn')]")
+	private WebElement buttonTaskEcheance;
+	
+	@FindBy(xpath="//span[contains(@class, 'back-button')]")
+	private WebElement buttonTaskReturn;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span")
+	private WebElement savedProjectModalBody;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::td[.='OK']")
+	private WebElement savedProjectModalButtonOk;
+	
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-window-modal-close')]")
+	private WebElement savedProjectModalButtonClose;
+	
+	@FindBy(xpath="//td[.='Planification de projet']")
+	private WebElement buttonProjectPlanning;
+	
+	@FindBy(xpath="//div[contains(@class, 'standard-task')]")
+	private List<WebElement> tasksDateBars;
+	
+	@FindBy(xpath="//div[@class='deadline']")
+	private List<WebElement> tasksDeadlineBars;
+	
+//	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
+//	private WebElement 
+//	
+//	
 	public void clickMenu(WebDriver driver, String title, String subtitle) {
 		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,'"+ title.trim()+"')]/.."));
 		
@@ -237,6 +301,100 @@ public class PageMain {
 		} catch(Exception ex) {
 			System.out.println("Pas de menu horizontal");
 		}
+	}
+	
+	public void clickOnProjectsList() {
+		buttonProjectsList.click();
+	}
+	
+	public void testProjectTasks() {
+		Assert.assertEquals("WBS (tâches)", selectedTab.getText().trim());
+		Assert.assertEquals("DEBUT Calendrier Détail du projet PROJET_TEST1", breadcrumb.getText().trim().replace("\r", "").replace("\n", " "));
+	}
+	
+	public void createTask(String title, String hour) throws InterruptedException {
+		Utils.renseignerChamp(taskTitle, title);
+		Utils.renseignerChamp(taskHour,  hour);
+		buttonAddTask.click();
+		Thread.sleep(1000);
+		//check the table
+		WebElement line = getTaksRow(title);
+		Assert.assertEquals(title+".  Avancement:0.", line.getAttribute("title").trim());
+		Assert.assertEquals("",getTaskCellValue(line, 2));
+		Assert.assertEquals(hour, getTaskCellValue(line, 4));
+		Assert.assertEquals("0 €", getTaskCellValue(line, 5));
+		Assert.assertEquals("", getTaskCellValue(line, 6));
+		Assert.assertEquals("", getTaskCellValue(line, 7));
+		WebElement iconsContainer = line.findElement(By.xpath("td[8]"));
+		//Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Modifier']")).isDisplayed());
+		//Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Supprimer']")).isDisplayed());
+	}
+	
+	public WebElement getTaksRow(String taskname) {
+		for(WebElement task: tasks) {
+			System.out.println("task name = " + getTaskCellValue(task, 3));
+			if(taskname.equals(getTaskCellValue(task, 3)))
+				return task;
+		}
+		return null;
+	}
+	
+	public String getTaskCellValue(WebElement line, int col) {
+		return line.findElement(By.xpath("td["+col+"]/descendant::input[@type='text'][1]")).getAttribute("value").trim();
+	}
+	
+	public void checkTasksList(String... expected) {
+		List<String> tasksTitle = tasks.stream().map(task -> getTaskCellValue(task, 3)).filter(str -> !str.isEmpty()).collect(Collectors.toList());
+		Assert.assertEquals(Arrays.asList(expected), tasksTitle);
+	}
+	
+	public void moveTaskDown(String task) {
+		this.getTaksRow(task).click();
+		buttonTaskDown.click();
+	}
+	public void moveTaskUp(String task) {
+		this.getTaksRow(task).click();
+		buttonTaskUp.click();
+	}
+	
+	public void editTask(String taskname, String code, Integer datedebut, Integer echeance) throws InterruptedException {
+		getTaksRow(taskname).findElement(By.xpath("td[8]/descendant::span[@title='Modifier']")).click();
+		Thread.sleep(200);
+		Utils.renseignerChamp(inputTaskCode, code);
+		if(datedebut != null) {
+			buttonTaskDatedebut.click();
+			Thread.sleep(100);
+			int index = 6 + datedebut;
+			System.out.println("day = " + days.get(index).getText());
+			days.get(index).click();
+		}
+		if(echeance != null) {
+			buttonTaskEcheance.click();
+			Thread.sleep(100);
+			int index = 6 + echeance;
+			System.out.println("day = " + days.get(index).getText());
+			days.get(index).click();
+			Thread.sleep(100);
+		}
+		
+		buttonTaskReturn.click();
+	}
+	
+	public void saveProject() throws InterruptedException {
+		saveProject.click();
+		Thread.sleep(100);
+		Assert.assertEquals("Projet enregistré", savedProjectModalBody.getText().trim());
+		Assert.assertTrue(savedProjectModalButtonOk.isDisplayed());
+		Assert.assertTrue(savedProjectModalButtonClose.isDisplayed());
+		savedProjectModalButtonOk.click();
+		Thread.sleep(100);
+	}
+	
+	public void gotoProjectPlanning() {
+		buttonProjectPlanning.click();
+		//check that bars are visible on the planning
+		Assert.assertFalse(tasksDateBars.isEmpty());
+		Assert.assertFalse(tasksDeadlineBars.isEmpty());
 	}
 
 }
