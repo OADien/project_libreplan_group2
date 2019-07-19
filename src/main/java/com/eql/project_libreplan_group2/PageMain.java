@@ -18,6 +18,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.google.common.collect.Lists;
+
 public class PageMain {
 	
 	@FindBy(xpath="//span[@title='Créer un nouveau projet']")
@@ -79,6 +81,27 @@ public class PageMain {
 	
 	@FindBy(xpath="//div[contains(@class, 'z-window-embedded')][2]/descendant::li[contains(@class, 'z-tab')]")
 	private List<WebElement> tabs;
+	
+	@FindBy(xpath="//div[contains(@class, 'z-window-embedded')][2]")
+	private WebElement tabsContainer;
+	
+	@FindBy(xpath="//span[contains(@title, 'Enregistrer le projet')]")
+	private WebElement saveProject;
+	
+	@FindBy(xpath="//span[contains(@title, \"Annuler l'édition\")]")
+	private WebElement cancelProject;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-window-modal-header')]")
+	private WebElement cancelModalTitle;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-messagebox')]")
+	private WebElement cancelModalBody;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='OK']")
+	private WebElement cancelModalButtonOk;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='Annuler']")
+	private WebElement cancelModalButtonAnnuler;
 	
 	
 	
@@ -159,20 +182,61 @@ public class PageMain {
 		days.get(index).click();
 		saveButton.click();
 		
-		Thread.sleep(100);
+		Thread.sleep(2000);
 		Assert.assertEquals("Détail du projet", selectedLeft.getText().trim());
 		Assert.assertEquals("WBS (tâches)", selectedTab.getText().trim());
 		
 		//check that there are 5 left buttons
-		String[] leftText= (String[]) left.stream().filter(element -> element.isDisplayed()).map(element -> element.getText().trim()).collect(Collectors.toList()).toArray();
+		List<String> leftText= left.stream().filter(element -> element.isDisplayed()).map(element -> element.getText().trim()).collect(Collectors.toList());
 		System.out.println(String.join(",", leftText));
-		String[] expected = new String[] {"Planification de projet", "Détail du projet","Chargement des ressources","Allocation avancée","Tableau de bord"};
-		Assert.assertTrue(Arrays.equals(expected, leftText));
+		List<String> expected = Arrays.asList("Planification de projet", "Détail du projet","Chargement des ressources","Allocation avancée","Tableau de bord" );
+		Assert.assertEquals(expected, leftText);
 		
-		String[] tabsText= (String[]) left.stream().map(element -> element.getText().trim()).filter(element -> !element.isEmpty()).collect(Collectors.toList()).toArray();
-		System.out.println(String.join(",", leftText));
-		expected = new String[] {"WBS (tâches)", "Données générales", "Coût", "Avancement", "Libellés", "Exigence de critère", "Matériels", "Formulaires qualité des tâches", "Autorisation"};
-		Assert.assertTrue(Arrays.equals(expected, tabsText));
+		List<String> tabsText= tabs.stream().map(element -> element.getText().trim()).filter(element -> !element.isEmpty()).collect(Collectors.toList());
+		System.out.println(String.join(",", tabsText));
+		expected = Arrays.asList("WBS (tâches)", "Données générales", "Coût", "Avancement", "Libellés", "Exigence de critère", "Matériels", "Formulaires qualité des tâches", "Autorisation" );
+		Assert.assertEquals(expected, tabsText);
+		
+		Assert.assertTrue(saveProject.isDisplayed());
+		Assert.assertTrue(cancelProject.isDisplayed());
+		
+		//click on the cancel button
+		cancelProject.click();
+		
+		Thread.sleep(100);
+		
+		Assert.assertEquals("Confirmer la fenêtre de sortie", cancelModalTitle.getText().trim());
+		Assert.assertEquals("Les modifications non enregistrées seront perdues. Êtes-vous sûr ?", cancelModalBody.getText().trim());
+		Assert.assertTrue(cancelModalButtonOk.isDisplayed());
+		Assert.assertTrue(cancelModalButtonAnnuler.isDisplayed());
+		
+		
+		//click on Annuler on the popup
+		cancelModalButtonAnnuler.click();
+		
+		Thread.sleep(1000);
+		
+		//click on the button to cancel the editing of the project
+		cancelProject.click();
+		
+		Thread.sleep(100);
+		
+		Assert.assertEquals("Confirmer la fenêtre de sortie", cancelModalTitle.getText().trim());
+		Assert.assertEquals("Les modifications non enregistrées seront perdues. Êtes-vous sûr ?", cancelModalBody.getText().trim());
+		Assert.assertTrue(cancelModalButtonOk.isDisplayed());
+		Assert.assertTrue(cancelModalButtonAnnuler.isDisplayed());
+		
+		cancelModalButtonOk.click();
+		
+		Thread.sleep(1000);
+		
+		Assert.assertEquals("Planification des projets", selectedLeft.getText().trim());
+		//no horizontal menu
+		try {
+			Assert.assertFalse(tabsContainer.isDisplayed());
+		} catch(Exception ex) {
+			System.out.println("Pas de menu horizontal");
+		}
 	}
 
 }
