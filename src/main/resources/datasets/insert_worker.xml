@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+<worker worker_id="2021" first_name="Jean" surname="Pierre" nif="001" user_id="NULL" />
+<worker worker_id="2022" first_name="Jeanjean" surname="Pierrepierre" nif="002" user_id="NULL" />
+
+</dataset>
