@@ -25,7 +25,13 @@ public class Utils {
 	private static final String URL = "http://localhost:8090/libreplan";
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "admin";
+	
+	private static final String DRIVER = "com.mysql.jdbc.Driver";
+	private static final String JDBC_URL = "jdbc:mysql://localhost:3306/hotel";
+	private static final String USER = "username";
+	private static final String PASSWORDBDD = "password";
 
+	
 	public static WebDriver chooseBrowser(String browser) {
 		WebDriver driver;
 		switch (browser) {
@@ -60,12 +66,16 @@ public class Utils {
 		field.sendKeys(str);
 	}
 	
-	private static final String DRIVER = "com.mysql.jdbc.Driver";
-	private static final String JDBC_URL = "jdbc:mysql://localhost:3306/hotel";
-	private static final String USER = "username";
-	private static final String PASSWORDBDD = "password";
+	public static boolean checkBoxCode(WebElement code) {
+		if(code.isSelected()) {
+			System.out.println("la case est cochée");
+		}
+		else {
+			code.click();	
+		}
+		return code.isSelected();
+    }
 
-	
 	private static IDataSet readDataSet (String filename) throws Exception{
 		return new FlatXmlDataSetBuilder().build(new File(filename));
 		}
