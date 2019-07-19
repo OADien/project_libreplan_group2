@@ -15,6 +15,7 @@ public class Utils {
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "admin";
 
+	
 	public static WebDriver chooseBrowser(String browser) {
 		WebDriver driver;
 		switch (browser) {
@@ -48,5 +49,15 @@ public class Utils {
 		field.clear();
 		field.sendKeys(str);
 	}
+	
+	public static boolean checkBoxCode(WebElement code) {
+		if(code.isSelected()) {
+			System.out.println("la case est cochée");
+		}
+		else {
+			code.click();	
+		}
+		return code.isSelected();
+    }
 
 }
