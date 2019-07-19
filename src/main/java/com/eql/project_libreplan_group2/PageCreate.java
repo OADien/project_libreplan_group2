@@ -1,7 +1,7 @@
 package com.eql.project_libreplan_group2;
 
 import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -94,9 +94,9 @@ public class PageCreate {
 		
 		//vérification enregistrement nouveau participant
 		public void verificationEnregistrement(WebDriver driver) {
-			
 			assertTrue(driver.findElement(By.xpath("//span[.='Participant enregistré']")).isDisplayed());
-			
-		
+			assertEquals(prenom.getText(),"Jean");
+			assertEquals(nom.getText(),"DU");
+			assertEquals(ID.getText(),"jdu");
 		}
 }
