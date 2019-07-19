@@ -103,8 +103,36 @@ public class PageMain {
 	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='Annuler']")
 	private WebElement cancelModalButtonAnnuler;
 	
+	@FindBy(xpath="//td[.='Liste des projets']")
+	private WebElement buttonProjectsList;
 	
 	
+	@FindBy(xpath="//tr[@class='ruta']")
+	private WebElement breadcrumb;
+	
+	@FindBy(xpath="//span[.='Nouvelle tâche']/following::input[1]")
+	private WebElement taskTitle;
+	
+	@FindBy(xpath="//span[.='Heures']/following::input[1]")
+	private WebElement taskHour;
+	
+	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
+	private WebElement  buttonAddTask;
+	
+	@FindBy(xpath="//span[@title='Fully scheduled']")
+	private WebElement  buttonTaskScheduling;
+	
+	@FindBy(xpath="//span[@title='Déprogrammé']")
+	private WebElement  buttonTaskUnplanned;
+	
+	@FindBy(xpath="//tr[contains(@class, 'z-treerow')]")
+	private List<WebElement> tasks;
+	
+	
+//	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
+//	private WebElement 
+//	
+//	
 	public void clickMenu(WebDriver driver, String title, String subtitle) {
 		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,'"+ title.trim()+"')]/.."));
 		
@@ -237,6 +265,41 @@ public class PageMain {
 		} catch(Exception ex) {
 			System.out.println("Pas de menu horizontal");
 		}
+	}
+	
+	public void clickOnProjectsList() {
+		buttonProjectsList.click();
+	}
+	
+	public void testProjectTasks() {
+		Assert.assertEquals("WBS (tâches)", selectedTab.getText().trim());
+		Assert.assertEquals("DEBUT Calendrier Détail du projet PROJET_TEST1", breadcrumb.getText().trim().replace("\r", "").replace("\n", " "));
+	}
+	
+	public void createTask(String title, String hour) {
+		Utils.renseignerChamp(taskTitle, title);
+		Utils.renseignerChamp(taskHour,  hour);
+		buttonAddTask.click();
+		
+		//check the table
+		WebElement line = getTaksRow(title);
+		Assert.assertEquals("Tache1-P1.  Avancement:0.", line.getAttribute("title").trim());
+		Assert.assertEquals("", line.findElement(By.xpath("td[2]")).getText().trim());
+		Assert.assertEquals(hour, line.findElement(By.xpath("td[4]")).getText().trim());
+		Assert.assertEquals("0 €", line.findElement(By.xpath("td[5]")).getText().trim());
+		Assert.assertEquals("", line.findElement(By.xpath("td[6]")).getText().trim());
+		Assert.assertEquals("", line.findElement(By.xpath("td[7]")).getText().trim());
+		WebElement iconsContainer = line.findElement(By.xpath("td[8]"));
+		Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Modifier']")).isDisplayed());
+		Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Supprimer']")).isDisplayed());
+	}
+	
+	public WebElement getTaksRow(String taskname) {
+		for(WebElement task: tasks) {
+			if(task.findElement(By.xpath("td[3]")).getText().trim().equals(taskname))
+				return task;
+		}
+		return null;
 	}
 
 }

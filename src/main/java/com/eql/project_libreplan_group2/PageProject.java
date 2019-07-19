@@ -49,5 +49,16 @@ public class PageProject {
 		Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Voir la prévision']")).isDisplayed());
 		Assert.assertTrue(iconsContainer.findElement(By.xpath("//span[@title='Créer un modèle']")).isDisplayed());
 	}
+	
+	public void clickOnProject(String projectname) {
+		WebElement pname = null;
+		for (WebElement proj : projectsList) {
+			pname = proj.findElement(By.xpath("td[1]"));
+			if (pname.getText().trim().equals(projectname)) {
+				break;
+			}
+		}
+		pname.click();
+	}
 
 }
