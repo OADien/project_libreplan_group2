@@ -33,6 +33,10 @@ public class TestResources {
 		pageTasks.clickOnContextItem("Allocation de ressources");
 		pageTasks.testPopup(driver);
 		pageTasks.clickResource(0);
+		pageTasks.saveTaskResources();
+		pageTasks.checkTaskResourcesAllocation(0);
+		PageTaskResources pageTaskResources = pageTasks.gotoResourcesList(driver);
+		pageTaskResources.test();
 	}
 
 }
