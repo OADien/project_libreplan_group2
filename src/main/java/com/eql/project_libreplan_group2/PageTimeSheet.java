@@ -14,4 +14,12 @@ public class PageTimeSheet {
 	public void selectTypeHeures(String type_heures) {
 		Utils.selectOptionFromMenu(menu_type_heures, type_heures);
 	}
+	
+	@FindBy (xpath = "\"//input[@class='z-textbox']")
+	private WebElement string_to_number;
+	
+	
+	public int stringToInt(String number) {
+		return Utils.putStringToInt(number);
+	}
 }

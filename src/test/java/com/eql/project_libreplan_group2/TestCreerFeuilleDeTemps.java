@@ -22,22 +22,23 @@ public class TestCreerFeuilleDeTemps {
 
 	private WebDriver driver;
 	String type_heures="Default";
+	
 
 	@Before
 		public void init() throws Exception {
-		Utils.insertData("src\\main\\resources\\datasets\\insert_resource.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_worker.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_order_element.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_resource.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_worker.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_order_element.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
 		driver = Utils.chooseBrowser("chrome");
 	}
 
 	@After
 	public void quit() throws Exception {
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_resource.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_worker.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_order_element.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_resource.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_worker.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_order_element.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
 		//driver.quit();
 	}
 
@@ -113,25 +114,32 @@ public class TestCreerFeuilleDeTemps {
 		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Sauvegarder & Nouvelle feuille de temps']")).isDisplayed());
 		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Annuler']")).isDisplayed());
 	
-		
-
 
 	
 		
 		//ACTION : Ajouter une ligne de feuille de temps
 		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Ajouter une ligne']")).click();
+		Thread.sleep(1000);
+		assertTrue(driver.findElement(By.xpath("(//div[@class='z-grid-body'])[6]")).isDisplayed());
+		
+		
+		
+		
 		driver.findElement(By.xpath("(//i[@class='z-datebox-btn'])[5]")).click();
 		driver.findElement(By.xpath("(//td[@class='z-calendar-wkday' and text()='22'])[5]")).click();
 		driver.findElement(By.xpath("(//i[@class='z-combobox-btn'])[2]")).click();
-		driver.findElement(By.xpath("(//td[@class='z-comboitem-text'])[1]")).click();
+		driver.findElement(By.xpath("(//td[@class='z-comboitem-text'])[3]")).click();
 		driver.findElement(By.xpath("(//i[@class='z-bandbox-btn'])[3]")).click();
 		driver.findElement(By.xpath("(//div[@class='z-listcell-cnt z-overflow-hidden'])[5]")).click();
+		driver.findElement(By.xpath("(//input[@type='checkbox'])[2]")).click();
+		driver.findElement(By.xpath("//div[@class='z-row-cnt z-overflow-hidden']/descendant::select")).click();
+		driver.findElement(By.xpath("//div[@class='z-row-cnt z-overflow-hidden']/descendant::select/descendant::option[1]")).click();
 		WebElement heures = driver.findElement(By.xpath("//input[@class='z-textbox']"));
 		heures.clear();
 		heures.sendKeys("8");
-		page_time_sheet.selectTypeHeures(type_heures);
-		driver.findElement(By.xpath("(//input[@type='checkbox'])[2]")).click();
-		driver.findElement(By.xpath("(//td[@class='z-button-cm' and text()='Enregistrer']")).click();
+
+		
+//		driver.findElement(By.xpath("(//td[@class='z-button-cm' and text()='Enregistrer']")).click();
 		
 		
 		
