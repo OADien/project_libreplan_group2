@@ -3,37 +3,40 @@ package com.eql.project_libreplan_group2;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class TestCreateUser {
+	
+	@FindBy(xpath="//a[@href=\"/libreplan/resources/worker/worker.zul\"]")
+	private WebElement participant;
 
 	private WebDriver driver;
 
-/*	@Before
+	@Before
 	public void init() {
 		driver = Utils.chooseBrowser("chrome");
 	}
 
-/*	// @After
+	// @After
 	public void quit() {
 		driver.quit();
 	}
-*/
-	//@Test
-	public void testLogin() {
-		PageMain pageMain = Utils.login(driver);
-	}
-	
+
+
 	@Test
-	public void testSection() {
+	public void testSection() throws InterruptedException {
 		PageMain pageMain = Utils.login(driver);
 		pageMain.clickMenu(driver, "Ressources", "Participants");
-	}
-	
-	@Test
-	public void createUser() {
-		Actions create = new Actions(driver);
-		create.click();
+		PageCreate pageCreate = PageFactory.initElements(driver, PageCreate.class);
+		pageCreate.creation();
 		
-}
-}
+		pageCreate.verificationConformite(driver);
+		
+		pageCreate.newInformation(driver);
+		//Partie vérifiée OK
+		
+		pageCreate.newUser(driver);
+	}
+	}

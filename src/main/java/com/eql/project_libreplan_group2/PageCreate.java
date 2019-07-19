@@ -12,19 +12,19 @@ public class PageCreate {
 	@FindBy(xpath="//td[@class='z-button-cm'][contains(.,'Créer')]")
 	private WebElement create;
 	
-	@FindBy(xpath="//span[contains(.,'Prénom')]")
+	@FindBy(xpath="//fieldset[1]/descendant::span[contains(.,'Prénom')]/ancestor::tr[1]/descendant::input")
 	private WebElement prenom;
 	
-	@FindBy(xpath="//span[contains(.,'Nom')]")
+	@FindBy(xpath="//fieldset[1]/descendant::span[contains(.,'Nom')]/ancestor::tr[1][not(contains(@style, 'display:none'))]/descendant::input")
 	private WebElement nom;
 	
-	@FindBy(xpath="//span[contains(.,'ID')]")
+	@FindBy(xpath="//fieldset[1]/descendant::span[contains(.,'ID')]/ancestor::tr[1]/descendant::input")
 	private WebElement ID;
 	
 	@FindBy(xpath="//label[contains(.,'Créer un nouvel utilisateur')]/preceding-sibling::input")
 	private WebElement new_user_btn;
 	
-	@FindBy(xpath="//span[.='Nom d'utilisateur']/ancestor::tr[1]/td[2]/descendant::input")
+	@FindBy(xpath="//span[.=\"Nom d'utilisateur\"]/ancestor::tr[1]/descendant::input")
 	private WebElement name_user;
 	
 	@FindBy(xpath="//span[.='Mot de passe']/ancestor::tr[1]/td[2]/descendant::input")
@@ -44,21 +44,23 @@ public class PageCreate {
 	
 	
 	//Cliquer sur le bouton Créer
-	public void creation(WebDriver driver) {
+	public void creation() {
 		create.click();
 	}	
 	//Vérifier la conformité de l'onglet
-		public void verificationConformite(WebDriver driver) {
+		public void verificationConformite(WebDriver driver) throws InterruptedException {
+			
+			Thread.sleep(500);
 		
 		assertTrue(driver.findElement(By.xpath("//span[contains(.,'Données de base')]")).isDisplayed());
 		
 		assertTrue(driver.findElement(By.xpath("//span[contains(.,'Prénom')]")).isDisplayed());
 		
-		assertTrue(driver.findElement(By.xpath("//span[contains(.,'Nom')]")).isDisplayed());
+		assertTrue(driver.findElement(By.xpath("//div[@class='z-fieldset-cnt']/descendant::span[.='Nom']")).isDisplayed());
 		
 		assertTrue(driver.findElement(By.xpath("//span[contains(.,'ID')]")).isDisplayed());
-		
-		assertTrue(driver.findElement(By.xpath("//option[contains(.,'Ressource normale')]")).isDisplayed());
+	
+		assertTrue(driver.findElement(By.xpath("//select[@selectedindex='1']")).isDisplayed());
 		
 		assertTrue(driver.findElement(By.xpath("//span[contains(.,'Utilisateur lié')]")).isDisplayed());
 		
@@ -67,14 +69,15 @@ public class PageCreate {
 		assertTrue(driver.findElement(By.xpath("//label[contains(.,'Utilisateur existant')]")).isDisplayed());
 		
 		assertTrue(driver.findElement(By.xpath("//label[contains(.,'Créer un nouvel utilisateur')]")).isDisplayed());
-	
-		assertTrue(driver.findElement(By.xpath("//td[contains(.,'Enregistrer')]")).isDisplayed());
+
+		assertTrue(driver.findElement(By.xpath("//span[contains(@class, 'save-button')][not(contains(@style, 'display:none'))]")).isDisplayed());
 	
 		assertTrue(driver.findElement(By.xpath("//td[contains(.,'Sauver et continuer')]")).isDisplayed());
 		
 		assertTrue(driver.findElement(By.xpath("//div[@class='z-window-embedded-cnt-noborder']/span[@class='cancel-button global-action z-button']")).isDisplayed());
-	
+		}
 		
+		public void newInformation(WebDriver driver) {
 		//1) Renseigner les champs (Prénom, nom, ID)
 		Utils.renseignerChamp(prenom, "Jean");
 		
@@ -99,4 +102,5 @@ public class PageCreate {
 			assertEquals(nom.getText(),"DU");
 			assertEquals(ID.getText(),"jdu");
 		}
+		//ok jusque là	
 }

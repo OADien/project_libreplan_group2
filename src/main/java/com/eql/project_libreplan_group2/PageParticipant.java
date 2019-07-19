@@ -18,11 +18,5 @@ public class PageParticipant {
 		return PageFactory.initElements(driver, PageCreate.class);
 		
 	}
-	
-/*	@Test
-	public void testSection() {
-		PageMain pageMain = Utils.login(driver);
-		pageMain.clickMenu(driver, "Ressources", "Participants");
-	}
-*/
+
 }
