@@ -9,7 +9,7 @@ public class TestCreateUser {
 
 	private WebDriver driver;
 
-	@Before
+/*	@Before
 	public void init() {
 		driver = Utils.chooseBrowser("chrome");
 	}
