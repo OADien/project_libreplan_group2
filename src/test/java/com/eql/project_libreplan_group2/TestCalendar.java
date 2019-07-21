@@ -5,11 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +18,8 @@ public class TestCalendar {
 	String browser = "chrome";
 	String name = "Calendrier - Test 1";
 	String name_calendar_child = "Calendrier - Test Calendrier Dérivé";
-	private Object[] expected;
+	String name_calendar_copy = "Calendrier - Test 2";
+	//private Object[] expected;
 	//String name_calendar_child = "Calendrier - Test Calendrier Dérivé";
 	@Before
 	public void setup(){
@@ -131,16 +129,8 @@ public class TestCalendar {
 		 	System.out.println("Le nombre de ligne = "+ listCalendar.size());
 			driver.findElement(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[1]")).isDisplayed();
 			
-			WebElement line;
-			for (WebElement e : listCalendar) {
-				WebElement title=e.findElement(By.xpath("td[1]"));
-				System.out.println(title.getText());
-				if(name.equals(title.getText())){
-					line=e;
-					break;
-				}
+			WebElement line = getLine(listCalendar);
 			
-			}
 			
 			System.out.println("Calendrier - Test 1 =========> done");
 			
@@ -250,7 +240,97 @@ public class TestCalendar {
 				assertFalse(field_child.isDisplayed());
 				
 				//ACTION : Créer un calendrier par copie
+				listCalendar = driver.findElements(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr"));
+				line = getLine(listCalendar);
+				System.out.println(line.getText());
+				
+				WebElement button_calendar_copy = line.findElement(By.xpath("//span[contains(@title,'Créer une copie')]"));
+				button_calendar_copy.click();
+				
+				//VERIFICATION : Affichage de la page "Créer Calendrier : Calendrier - Test 1"
+				
+				assertEquals("Créer Calendrier: Calendrier - Test 1", driver.findElement(By.xpath("//td[text()='Créer Calendrier: Calendrier - Test 1']")).getText());
+				System.out.println("calendrier par copie");
 					
-	}
+				//VERIFICATION : les champs sont renseignés 
+				WebElement field_nom_copy = driver.findElement(By.xpath("//div[@class='z-row-cnt z-overflow-hidden']/descendant::span[.='Nom']/ancestor::tr[1]/descendant::input"));
+				//assertTrue(field_nom_copy.getText().isEmpty());
+				
+				WebElement field_type_copy = driver.findElement(By.xpath("//div[@class='z-row-cnt z-overflow-hidden']/descendant::span[.='Type']/ancestor::tr[1]/td[2]"));
+			    assertEquals("Calendrier source", field_type.getText());
+			    
+			    System.out.println("champs [Nom] et [Type] =========> done");
+				
+			    //ACTION: Créer un calendrier par copie - Nom du calendrier non conforme
+			    button_save_continue.click();
+			    
+			    //VERIFICATION : message WARNING
+			    //Thread.sleep(1000);
+			    WebElement msg_warning = driver.findElement(By.xpath("//div[@class='message_WARNING']/descendant::span"));
+			    assertEquals("Calendrier - Test 1 existe déjà", msg_warning.getText());
+			    
+			    System.out.println("pas 11 ======> done");
+			    
+			    //ACTION : Créer un calendrier par copie : renseigner les champs [Nom] / case code cochée / [Enregistré
+			    
+			    Utils.renseignerChamp(field_nom_copy, name_calendar_copy);
+			     
+			    Utils.checkBoxCode(box_code);
+			    System.out.println("La case [Générer le code est cochée =========> done");
+			    
+			    page_calendar.clicSave();
+			    System.out.println("Calendrier dérivée =========> done");
+			    
+			    //VERIFICATION : Retour sur la page "Liste de calendriers"
+				 Thread.sleep(1000); //attendre 10 sec ==> le temps de retour sur la page "Liste de calendriers"
+				 assertEquals("Liste de calendriers", driver.findElement(By.xpath("//*[contains(@class,'z-window-embedded-header')]")).getText());
+				 System.out.println("[Liste de calendriers] =========> done");
+				 
+				//VERIFICATION : message "Calendrier - Test 2" enregistré" enregistré"
+				 assertEquals("Calendrier de base \"Calendrier - Test 2\" enregistré", driver.findElement(By.xpath("//div[@class='message_INFO']/descendant::span")).getText());
+				 System.out.println("[Calendriers - Test 2] =========> done");
+				 
+				 //ACTION : le calendrier "Calendrier - Test 2" est présent
+				 List<WebElement> listCalendar2 = driver.findElements(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr"));
+				 	assertFalse(listCalendar.isEmpty());
+				 	System.out.println("Le nombre de ligne = "+ listCalendar.size());
+					driver.findElement(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[3]")).isDisplayed();
+					
+					WebElement linecopy = getLinecopy(listCalendar2);
+					System.out.println("Calendrier - Test 2 est présent =========> done");
 
+				//VERIFICATION : Le "Calendrier - Test 2" n'est pas affiché en tant que sous-calendrier du calendrier "Calendrier - Test 1"
+				
+				List<WebElement> listElementCalendar = driver.findElements(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[3]/td[1]/descendant::div[@class='z-treecell-cnt z-overflow-hidden']/span[contains(@class,'z-dottree-line')]"));
+				assertTrue(listElementCalendar.isEmpty());
+			 	System.out.println("Calendrier 2 n'est pas un sous calendrier de calendrier 1 =======> done");
+			 	
+								    
+	}
+	
+	
+	public WebElement getLine(List<WebElement> listCalendar) {
+		for (WebElement e : listCalendar) {
+			WebElement title=e.findElement(By.xpath("td[1]"));
+			//System.out.println(title.getText());
+			if(name.equals(title.getText())){
+				return e;
+			}
+		
+		}
+		return null;
+	}
+	
+	public WebElement getLinecopy(List<WebElement> listCalendar2) {
+		for (WebElement e : listCalendar2) {
+			WebElement title=e.findElement(By.xpath("td[1]"));
+			System.out.println(title.getText());
+			if(name_calendar_copy.equals(title.getText())){
+				return e;
+			}
+		
+		}
+		return null;
+	}
+	
 }
