@@ -9,11 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class PageTasks {
+public class PageTasks extends BasePage {
 
 	@FindBy(xpath = "//div[contains(@class, 'standard-task')]")
 	private List<WebElement> tasksDateBars;
@@ -65,9 +64,6 @@ public class PageTasks {
 
 	@FindBy(xpath = "//div[contains(@class, 'edit-task-window')]/descendant::div[@class='z-tabpanels']/div[@class ='z-tabpanel' and not(contains(@style, 'display:none')) and not(contains(@style, 'display: none'))]/descendant::legend[.='Allocations']/../descendant::tr[contains(@class, 'allocation-not-satisfied z-row')]")
 	private List<WebElement> resourcesRows;
-	
-	@FindBy(xpath="//td[.='Chargement des ressources']")
-	private WebElement buttonResourcesList;
 
 	public void test() {
 		Assert.assertFalse(tasksDateBars.isEmpty());
@@ -140,13 +136,7 @@ public class PageTasks {
 	}
 
 	public void checkTaskResourcesAllocation(int index) {
-		Assert.assertTrue(Arrays.asList(listResources.get(index).getAttribute("class").split(" ")).contains("assigned"));
-	}
-	
-	public PageTaskResources gotoResourcesList(WebDriver driver) throws InterruptedException {
-		buttonResourcesList.click();
-		Thread.sleep(100);
-		return PageFactory.initElements(driver, PageTaskResources.class);
+		Assert.assertTrue(Arrays.asList(tasksDateBars.get(index).getAttribute("class").split(" ")).contains("assigned"));
 	}
 	
 }

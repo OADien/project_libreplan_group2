@@ -11,10 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class PageProject {
-
-	@FindBy(xpath = "//span[contains(@class, 'perspective-active')]")
-	private WebElement selectedLeft;
+public class PageProject extends BasePage {
 
 	@FindBy(xpath = "//tr[contains(@class, 'projects-list')]")
 	private List<WebElement> projectsList;

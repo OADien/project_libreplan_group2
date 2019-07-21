@@ -37,6 +37,9 @@ public class TestResources {
 		pageTasks.checkTaskResourcesAllocation(0);
 		PageTaskResources pageTaskResources = pageTasks.gotoResourcesList(driver);
 		pageTaskResources.test();
+		pageTaskResources.expandTree(0);
+		pageTaskResources.hideTree(0);
+		pageTaskResources.saveProject();
 	}
 
 }

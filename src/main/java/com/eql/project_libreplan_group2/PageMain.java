@@ -19,12 +19,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.collect.Lists;
-
-public class PageMain {
+public class PageMain extends BasePage {
 	
-	@FindBy(xpath="//span[@title='Créer un nouveau projet']")
-	private WebElement buttonAdd;
 	
 	@FindBy(xpath="//div[contains(@class, 'z-window-modal')][1]")
 	private WebElement createModal;
@@ -71,45 +67,12 @@ public class PageMain {
 	@FindBy(xpath="//div[contains(@class, 'z-window-modal')][1]/descendant::i[contains(@class, 'z-datebox-btn')][ancestor::tr[1]/descendant::span[.='Echéance']]")
 	private WebElement buttonCal2;
 	
-	@FindBy(xpath="//span[contains(@class, 'perspective-active')]")
-	private WebElement selectedLeft;
-	
-	@FindBy(xpath="//li[contains(@class, 'z-tab-seld')]")
-	private WebElement selectedTab;
-	
-	@FindBy(xpath="//span[contains(@class, 'perspective')]")
-	private List<WebElement> left;
-	
 	@FindBy(xpath="//div[contains(@class, 'z-window-embedded')][2]/descendant::li[contains(@class, 'z-tab')]")
 	private List<WebElement> tabs;
 	
 	@FindBy(xpath="//div[contains(@class, 'z-window-embedded')][2]")
 	private WebElement tabsContainer;
 	
-	@FindBy(xpath="//span[contains(@title, 'Enregistrer le projet')]")
-	private WebElement saveProject;
-	
-	@FindBy(xpath="//span[contains(@title, \"Annuler l'édition\")]")
-	private WebElement cancelProject;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-window-modal-header')]")
-	private WebElement cancelModalTitle;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-messagebox')]")
-	private WebElement cancelModalBody;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='OK']")
-	private WebElement cancelModalButtonOk;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span[contains(@class, 'z-messagebox-btn')][.='Annuler']")
-	private WebElement cancelModalButtonAnnuler;
-	
-	@FindBy(xpath="//td[.='Liste des projets']")
-	private WebElement buttonProjectsList;
-	
-	
-	@FindBy(xpath="//tr[@class='ruta']")
-	private WebElement breadcrumb;
 	
 	@FindBy(xpath="//span[.='Nouvelle tâche']/following::input[1]")
 	private WebElement taskTitle;
@@ -146,19 +109,6 @@ public class PageMain {
 	
 	@FindBy(xpath="//span[contains(@class, 'back-button')]")
 	private WebElement buttonTaskReturn;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::span")
-	private WebElement savedProjectModalBody;
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::td[.='OK']")
-	private WebElement savedProjectModalButtonOk;
-	
-	
-	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal')]/descendant::div[contains(@class, 'z-window-modal-close')]")
-	private WebElement savedProjectModalButtonClose;
-	
-	@FindBy(xpath="//td[.='Planification de projet']")
-	private WebElement buttonProjectPlanning;
 	
 //	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
 //	private WebElement 
@@ -298,10 +248,6 @@ public class PageMain {
 		}
 	}
 	
-	public void clickOnProjectsList() {
-		buttonProjectsList.click();
-	}
-	
 	public void testProjectsListsDisplay() {
 		Assert.assertEquals("WBS (tâches)", selectedTab.getText().trim());
 		Assert.assertEquals("DEBUT Calendrier Détail du projet PROJET_TEST1", breadcrumb.getText().trim().replace("\r", "").replace("\n", " "));
@@ -373,22 +319,6 @@ public class PageMain {
 		}
 		
 		buttonTaskReturn.click();
-	}
-	
-	public void saveProject() throws InterruptedException {
-		saveProject.click();
-		Thread.sleep(100);
-		Assert.assertEquals("Projet enregistré", savedProjectModalBody.getText().trim());
-		Assert.assertTrue(savedProjectModalButtonOk.isDisplayed());
-		Assert.assertTrue(savedProjectModalButtonClose.isDisplayed());
-		savedProjectModalButtonOk.click();
-		Thread.sleep(100);
-	}
-	
-	public PageTasks gotoProjectPlanning(WebDriver driver) {
-		buttonProjectPlanning.click();
-		//check that bars are visible on the planning
-		return PageFactory.initElements(driver, PageTasks.class);
 	}
 
 }
