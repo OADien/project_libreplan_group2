@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-public class TestCalendar {
+public class TestCreateCalendar {
 	WebDriver driver;
 	String browser = "chrome";
 	String name = "Calendrier - Test 1";
@@ -42,7 +42,7 @@ public class TestCalendar {
 		 //ACTION : connexiont à la l'application Profil Admin + accéder à la page d'administration des calendriers
 		 PageMain page_main = Utils.login(driver);		
 		 page_main.clickMenu(driver, "Ressources", "Calendriers");
-		 PageCalendar page_calendar = PageFactory.initElements(driver, PageCalendar.class);
+		 PageCreateCalendar page_calendar = PageFactory.initElements(driver, PageCreateCalendar.class);
 		
 		//Vérification de l'affichage de la page "Liste de calendriers"
 		 assertEquals("Liste de calendriers", driver.findElement(By.xpath("//*[contains(@class,'z-window-embedded-header')]")).getText());
@@ -304,6 +304,7 @@ public class TestCalendar {
 				List<WebElement> listElementCalendar = driver.findElements(By.xpath("//tbody[contains(@class,'z-treechildren')]/tr[3]/td[1]/descendant::div[@class='z-treecell-cnt z-overflow-hidden']/span[contains(@class,'z-dottree-line')]"));
 				assertTrue(listElementCalendar.isEmpty());
 			 	System.out.println("Calendrier 2 n'est pas un sous calendrier de calendrier 1 =======> done");
+			 	System.out.println("Fin de CT Créer un calendrier");
 			 	
 								    
 	}
