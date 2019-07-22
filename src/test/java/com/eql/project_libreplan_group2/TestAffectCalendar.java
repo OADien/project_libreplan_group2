@@ -34,6 +34,22 @@ public class TestAffectCalendar {
 		 PageMain page_main = Utils.login(driver);		
 		 page_main.clickMenu(driver, "Ressources", "Participants");
 		 PageAffectCalendar page_affect_calendar = PageFactory.initElements(driver, PageAffectCalendar.class);
+		 
+		 //ACTION : 
+		 page_affect_calendar.checkPagePartipant();
+		 
+		 //ACTION : Accéder au formulaire de modification d'un participant
+		page_affect_calendar.clicButtonCreate();
+		page_affect_calendar.verificationConformite(driver);
+		page_affect_calendar.basicInformation();
+		page_affect_calendar.createNewParticipant();
+		page_affect_calendar.checkNewParticipantSave(driver);
+		page_affect_calendar.accessTheForm();
+		page_affect_calendar.checkPageModifyParticipant(driver);
+		page_affect_calendar.accessTabCalendar();
+		page_affect_calendar.checkLabCalendar(driver);
+		page_affect_calendar.removeDefaultCalendar();
+		page_affect_calendar.checkListDeroulante(driver);
 		
     }
 }
