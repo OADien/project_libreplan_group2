@@ -115,7 +115,7 @@ public class PageMain extends BasePage {
 //	
 //	
 	public void clickMenu(WebDriver driver, String title, String subtitle) {
-		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,'"+ title.trim()+"')]/.."));
+		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,\""+ title.trim()+"\")]/.."));
 		
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		Actions actions = new Actions(driver);
@@ -123,7 +123,7 @@ public class PageMain extends BasePage {
 		actions.build().perform();
 		
 		Actions actions2 = new Actions(driver);
-		actions2.moveToElement(wait.until(ExpectedConditions.visibilityOf(section.findElement(By.xpath("//div[contains(@class, 'submenu')]/ul/li/descendant::a[contains(., '"+subtitle+"')]")))));
+		actions2.moveToElement(wait.until(ExpectedConditions.visibilityOf(section.findElement(By.xpath("//div[contains(@class, 'submenu')]/ul/li/descendant::a[contains(., \""+subtitle+"\")]")))));
 		actions2.click();
 		actions2.build().perform();
 	}
