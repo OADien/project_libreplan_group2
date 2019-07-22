@@ -2,6 +2,7 @@ package com.eql.project_libreplan_group2;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.dbunit.Assertion;
@@ -11,6 +12,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -108,7 +110,7 @@ public class Utils {
 
 	public static void selectOptionFromMenu(WebElement menu,String option) {
 		Select select = new Select(menu);
-		select.selectByValue(option);
+		select.selectByVisibleText(option);
 	}
 	
 	public static int putStringToInt(String number) {
@@ -116,4 +118,24 @@ public class Utils {
 		return result;
 	}
 	
+//	public static int retournerNumeroDeLigneFeuilleDeTemps(WebDriver driver , String s){ 
+//		int ligneCourante = 1;
+//		List<WebElement> list_lignes = driver.findElements(By.xpath("//table/tbody/tr[@bgcolor='#FFFF88']"));
+//		for(WebElement ligne : list_lignes){
+//			int casecourante=0;
+//		   List<WebElement> list_cases = ligne.findElements(By.xpath("td"));
+//		   for( WebElement case_td : list_cases) {
+//			   casecourante++;
+//			   System.out.println("ligne_courante = "+ligneCourante+"\ncase courante = "+casecourante);
+//			   if(case_td.getText().equals(s)){
+//				   System.out.println("ligne_courante = ".toUpperCase()+ligneCourante+"\ncase courante = ".toUpperCase()+casecourante);
+//				return ligneCourante;
+//		   }
+//		   }
+//	      ligneCourante++;
+//		}
+//		return -1;
+//	}
+	
+
 }
