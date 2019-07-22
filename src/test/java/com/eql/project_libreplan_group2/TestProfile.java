@@ -44,6 +44,7 @@ public class TestProfile {
 		//delete all roles
 		pageCreateUpdateProfile.deleteAllRoles();
 		pageProfiles = pageCreateUpdateProfile.saveProfile(driver);
+		Thread.sleep(1000);
 		pageProfiles.checkProfileCreation(profile);
 		pageCreateUpdateProfile = pageProfiles.clickOnEditProfile(driver, profile);
 		pageCreateUpdateProfile.checkUpdatePage(profile);

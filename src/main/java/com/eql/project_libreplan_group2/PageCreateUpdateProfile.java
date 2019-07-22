@@ -37,7 +37,7 @@ public class PageCreateUpdateProfile extends BasePage{
 	@FindBy(xpath="//fieldset[legend[.='Association avec les rôles']]/descendant::tr[@class='z-columns']")
 	private WebElement rolesTableHeader;
 	
-	@FindBy(xpath="//fieldset[legend[.='Association avec les rôles']]/descendant::tr[@class='z-row']")
+	@FindBy(xpath="//fieldset[legend[.='Association avec les rôles']]/descendant::tr[contains(@class, 'z-row')]")
 	private List<WebElement> rolesRows;
 	
 	@FindBy(xpath="//span[contains(@class, 'save-button')]")
@@ -49,13 +49,14 @@ public class PageCreateUpdateProfile extends BasePage{
 	@FindBy(xpath="//span[contains(@class, 'cancel-button')]")
 	private WebElement buttonCancel;
 	
-	public void test() {
+	public void test() throws InterruptedException {
+		Thread.sleep(100);
 		Assert.assertEquals("", inputName.getAttribute("value").trim());
 		Assert.assertTrue(rolesSection.isDisplayed());
 		Assert.assertEquals("", inputRole.getAttribute("value").trim());
 		Assert.assertTrue(buttonAddRole.isDisplayed());
-		Assert.assertEquals("Nom du rôle", rolesTableHeader.findElement(By.xpath("//th[1]")).getText().trim());
-		Assert.assertEquals("Actions", rolesTableHeader.findElement(By.xpath("//th[1]")).getText().trim());
+		Assert.assertEquals("Nom du rôle", rolesTableHeader.findElement(By.xpath("th[1]")).getText().trim());
+		Assert.assertEquals("Actions", rolesTableHeader.findElement(By.xpath("th[2]")).getText().trim());
 		Assert.assertTrue(buttonSave.isDisplayed());
 		Assert.assertTrue(buttonSaveContinue.isDisplayed());
 		Assert.assertTrue(buttonCancel.isDisplayed());
@@ -80,10 +81,11 @@ public class PageCreateUpdateProfile extends BasePage{
 		return roleRow.findElement(By.xpath("td[2]/descendant::span[@title='Supprimer']"));
 	}
 	
-	public WebElement addRole(String role) {
+	public WebElement addRole(String role) throws InterruptedException {
 		buttonComboboxRole.click();
 		listRoles.stream().filter(element -> role.equals(element.getText().trim())).findFirst().get().click();
 		buttonAddRole.click();
+		Thread.sleep(100);
 		Assert.assertFalse(rolesRows.isEmpty());
 		//find the row with the seelected role
 		WebElement selectedRoleRow = getRoleRow(role);
@@ -96,18 +98,20 @@ public class PageCreateUpdateProfile extends BasePage{
 		Assert.assertEquals(1, rolesRows.stream().filter(row -> role.equals(row.findElement(By.xpath("td[1]")).getText().trim())).count());
 	}
 	
-	public void deleteRole(String role) {
+	public void deleteRole(String role) throws InterruptedException {
 		WebElement roleRow = getRoleRow(role);
 		getIconDeleteRole(roleRow).click();
+		Thread.sleep(100);
 		//check that the role row has been deleted from the table
 		Assert.assertNull(getRoleRow(role));
 	}
 	public void deleteAllRoles() throws InterruptedException {
+		System.out.println("rolesRows size = " + rolesRows.size());
 		for(int i = rolesRows.size()-1; i >=0 ; i--) {
 			getIconDeleteRole(rolesRows.get(i)).click();
 			Thread.sleep(100);
 		}
-		Assert.assertEquals(0, rolesRows);
+		Assert.assertEquals(0, rolesRows.size());
 	}
 	
 	public PageProfiles saveProfile(WebDriver driver) {
@@ -115,7 +119,8 @@ public class PageCreateUpdateProfile extends BasePage{
 		return PageFactory.initElements(driver, PageProfiles.class);
 	}
 	
-	public void checkUpdatePage(String profileName) {
+	public void checkUpdatePage(String profileName) throws InterruptedException {
+		Thread.sleep(200);
 		Assert.assertEquals("Modifier Profil: "+profileName, pageTitle.getText().trim());
 		Assert.assertEquals(0, rolesRows.size());
 	}
