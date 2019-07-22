@@ -66,12 +66,18 @@ public class PageCriteriaManagement extends BasePage {
 		Thread.sleep(100);
 		Assert.assertNotNull(getCriteriumRow(name));
 	}
+	
+	public void checkCriteriumNotExists(String name) throws InterruptedException {
+		Thread.sleep(100);
+		Assert.assertNull(getCriteriumRow(name));
+	}
 
 	public WebElement getEditCriteriumIcon(String name) {
 		return getCriteriumRow(name).findElement(By.xpath("td[5]/descendant::span[@title='Modifier']"));
 	}
 
-	public PageCreateUpdateCriterium editCriterium(WebDriver driver, String name) {
+	public PageCreateUpdateCriterium editCriterium(WebDriver driver, String name) throws InterruptedException {
+		Thread.sleep(100);
 		getEditCriteriumIcon(name).click();
 		return PageFactory.initElements(driver, PageCreateUpdateCriterium.class);
 	}
@@ -94,13 +100,22 @@ public class PageCriteriaManagement extends BasePage {
 	public void cancelDeleteCriterium() throws InterruptedException {
 		deleteCriteriumPopupCancelButton.click();
 		Thread.sleep(100);
-		Assert.assertFalse(deleteCriteriumPopup.isDisplayed());
+		try {
+			Assert.assertFalse(deleteCriteriumPopup.isDisplayed());
+		}catch(Exception ex) {
+			System.out.println("Le popup delete criterium n'est pas dans le DOM");
+		}
+		
 	}
 	
 	public void confirmDeleteCriterium(String name) throws InterruptedException {
 		deleteCriteriumPopupOkButton.click();
 		Thread.sleep(100);
-		Assert.assertFalse(deleteCriteriumPopup.isDisplayed());
+		try {
+			Assert.assertFalse(deleteCriteriumPopup.isDisplayed());
+		}catch(Exception ex) {
+			System.out.println("Le popup delete criterium n'est pas dans le DOM");
+		}
 		Assert.assertEquals(String.format("Type de critère \"%s\" supprimé", name), infoMessage.getText().trim());
 		Assert.assertNull(getCriteriumRow(name));
 	}

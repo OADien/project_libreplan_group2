@@ -47,7 +47,7 @@ public class PageCreateUpdateCriterium {
 	private WebElement buttonCancel;
 	
 	@FindBy(xpath="//div[@class='message_INFO']")
-	private WebElement infoMessage;
+	private List<WebElement> infoMessages;
 	
 	public void test() throws InterruptedException {
 		Thread.sleep(200);
@@ -69,11 +69,11 @@ public class PageCreateUpdateCriterium {
 		if(isEnabled != checkboxEnabled.isSelected())
 			checkboxEnabled.click();
 		Utils.renseignerChamp(textareaDescription, description);
-		buttonSaveContinue.click();
 	}
 	
-	public void checkCriteriumForm(String name) {
-		Assert.assertEquals(String.format("Type de critère \"%s\" enregistré", name), infoMessage.getText().trim());
+	public void checkCriteriumForm(String name) throws InterruptedException {
+		Thread.sleep(500);
+		Assert.assertEquals(String.format("Type de critère \"%s\" enregistré", name), infoMessages.get(infoMessages.size()-1).getText().trim());
 		Assert.assertEquals(String.format("Modifier Type de critère: %s", name), pageTitle.getText().trim());
 	}
 	
@@ -96,6 +96,10 @@ public class PageCreateUpdateCriterium {
 	
 	public void clickOnSaveAndContinue() {
 		buttonSaveContinue.click();
+	}
+	
+	public void clickOnSave() {
+		buttonSave.click();
 	}
 
 }

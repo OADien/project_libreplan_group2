@@ -25,20 +25,37 @@ public class TestCriteriaManagmenet {
 		pageMain.clickMenu(driver, "Ressources", "Critère");
 		PageCriteriaManagement pcm = PageFactory.initElements(driver, PageCriteriaManagement.class);
 		pcm.test();
+		
 		PageCreateUpdateCriterium pcuc = pcm.clickOnCreate(driver);
 		pcuc.test();
-		String name = "Test bouton [Sauver et continuer]";
-		pcuc.fillForm(name, "PARTICIPANT", true, true, true, "Critère - Test bouton [Sauver et continuer]");
+		String name = "Critère - Test bouton [Annuler]";
+		pcuc.fillForm(name, "PARTICIPANT", true, true, true, name);
 		pcm = pcuc.clickOnCancel(driver);
-		pcm.checkCriterium(name);
-		pcuc = pcm.editCriterium(driver, name);
-		pcuc.checkPageTitle(name);
+		pcm.checkCriteriumNotExists(name);
+		
+		String othername = "Critère - Test bouton [Enregistrer]";
+		pcuc = pcm.clickOnCreate(driver);
+		pcuc.test();
+		pcuc.fillForm(othername, "PARTICIPANT", true, true, true, othername);
+		pcuc.clickOnSave();
+		pcm.checkCriterium(othername);
+		
+		pcuc = pcm.clickOnCreate(driver);
+		pcuc.test();
+		String cname="Critère - Test bouton [Sauver et continuer]";
+		pcuc.fillForm(cname, "PARTICIPANT", true, true, true, cname);
+		pcuc.clickOnSaveAndContinue();
+		pcuc.checkCriteriumForm(cname);
+		
+		pcm = pcuc.clickOnCancel(driver);
+		pcuc = pcm.editCriterium(driver, cname);
+		pcuc.checkPageTitle(cname);
 		String name2 = "Critère - Test bouton [Sauver et continuer] 2";
 		pcuc.setName(name2);
 		pcm = pcuc.clickOnCancel(driver);
-		pcm.checkCriterium(name);
-		pcuc = pcm.clickOnCriteriumName(driver, name);
-		pcuc.checkPageTitle(name);
+		pcm.checkCriterium(cname);
+		pcuc = pcm.clickOnCriteriumName(driver, cname);
+		pcuc.checkPageTitle(cname);
 		pcuc.setName(name2);
 		pcuc.blur();
 		pcuc.checkPageTitle(name2);
