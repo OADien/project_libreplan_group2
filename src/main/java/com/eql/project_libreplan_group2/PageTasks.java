@@ -1,15 +1,18 @@
 package com.eql.project_libreplan_group2;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PageTasks extends BasePage {
@@ -64,6 +67,15 @@ public class PageTasks extends BasePage {
 
 	@FindBy(xpath = "//div[contains(@class, 'edit-task-window')]/descendant::div[@class='z-tabpanels']/div[@class ='z-tabpanel' and not(contains(@style, 'display:none')) and not(contains(@style, 'display: none'))]/descendant::legend[.='Allocations']/../descendant::tr[contains(@class, 'allocation-not-satisfied z-row')]")
 	private List<WebElement> resourcesRows;
+	
+	@FindBy(xpath="//span[.='Zoom:']/ancestor::td[1]/following-sibling::td[2]/descendant::select")
+	private WebElement selectZoom;
+	
+	@FindBy(xpath="//div[@id='timetrackerheader']/descendant::tr[@class='z-columns'][2]")
+	private WebElement zoomRow;
+	
+	@FindBy(xpath="//div[@id='timetrackerheader']/descendant::tr[@class='z-columns'][1]")
+	private WebElement zoomRowHead;
 
 	public void test() {
 		Assert.assertFalse(tasksDateBars.isEmpty());
@@ -137,6 +149,40 @@ public class PageTasks extends BasePage {
 
 	public void checkTaskResourcesAllocation(int index) {
 		Assert.assertTrue(Arrays.asList(tasksDateBars.get(index).getAttribute("class").split(" ")).contains("assigned"));
+	}
+	
+	public void setZoom(String zoom) {
+		Select select = new Select(selectZoom);
+		select.selectByVisibleText(zoom);
+	}
+	
+	public void checkH1h2() throws InterruptedException {
+		Thread.sleep(500);
+		Assert.assertEquals("H1", zoomRow.findElement(By.xpath("td[1]")).getText().trim());
+		Assert.assertEquals("H2", zoomRow.findElement(By.xpath("td[2]")).getText().trim());
+	}
+	
+	public void checkQuarters() throws InterruptedException {
+		Thread.sleep(500);
+		Assert.assertEquals("Q1", zoomRow.findElement(By.xpath("td[1]")).getText().trim());
+		Assert.assertEquals("Q2", zoomRow.findElement(By.xpath("td[2]")).getText().trim());
+		Assert.assertEquals("Q3", zoomRow.findElement(By.xpath("td[3]")).getText().trim());
+		Assert.assertEquals("Q4", zoomRow.findElement(By.xpath("td[4]")).getText().trim());
+	}
+	
+	public void checkMonths() throws InterruptedException {
+		Thread.sleep(500);
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		Assert.assertEquals(year +",H1", zoomRowHead.findElement(By.xpath("th[1]")).getText().trim());
+		Assert.assertEquals(year +",H2", zoomRowHead.findElement(By.xpath("th[2]")).getText().trim());
+		
+		Assert.assertEquals("janv.", zoomRow.findElement(By.xpath("td[1]")).getText().trim());
+		Assert.assertEquals("févr.", zoomRow.findElement(By.xpath("td[2]")).getText().trim());
+		Assert.assertEquals("mars", zoomRow.findElement(By.xpath("td[3]")).getText().trim());
+		Assert.assertEquals("avr.", zoomRow.findElement(By.xpath("td[4]")).getText().trim());
+		Assert.assertEquals("mai", zoomRow.findElement(By.xpath("td[5]")).getText().trim());
+		Assert.assertEquals("juin", zoomRow.findElement(By.xpath("td[6]")).getText().trim());
 	}
 	
 }
