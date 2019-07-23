@@ -1,5 +1,7 @@
 package com.eql.project_libreplan_group2;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
@@ -47,6 +49,19 @@ public class Utils {
 	public static void renseignerChamp(WebElement field, String str) {
 		field.clear();
 		field.sendKeys(str);
+	}
+	public static void verifierCouleur(WebElement msgBox, String couleurHexminuscule) {
+		System.out.println(msgBox.getText());
+		String rgbCode = msgBox.getCssValue("Background").substring(0, 18);
+		System.out.println(rgbCode);
+		String[] numbers = rgbCode.replace("rgb(", "").replace(")", "").split(",");
+		int r = Integer.parseInt(numbers[0].trim());
+		int g = Integer.parseInt(numbers[1].trim());
+		int b = Integer.parseInt(numbers[2].trim());
+		System.out.println("r: " + r + "g: " + g + "b: " + b);
+		String hex = "#" + Integer.toHexString(r) + Integer.toHexString(g) + Integer.toHexString(b);
+		System.out.println(hex);
+		assertTrue("[FAIL] Pas la bonne couleur", couleurHexminuscule.equals(hex));
 	}
 
 }
