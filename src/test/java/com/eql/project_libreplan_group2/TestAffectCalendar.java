@@ -51,7 +51,9 @@ public class TestAffectCalendar {
 		page_affect_calendar.checkListDeroulante(driver);
 		page_affect_calendar.selectCalendar(driver);
 		page_affect_calendar.checkPersonalData(driver);
+		page_affect_calendar.checkGreenColor();
 		page_affect_calendar.clicTabCalendar();
 		page_affect_calendar.checkTabCalendar(driver);
+		
     }
 }

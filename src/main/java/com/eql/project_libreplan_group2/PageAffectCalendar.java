@@ -9,9 +9,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.sql.SQLException;
 import java.util.List;
+
 
 public class PageAffectCalendar {
 	
@@ -119,10 +118,9 @@ public class PageAffectCalendar {
 	@FindBy(xpath="(//td[.='Annuler'])[3]")
 	private WebElement button_delete;
 
-//	private static final String DRIVER = "com.mysql.jdbc.Driver";
-//	private static final String JDBC_URL_BDD = "jdbc:mysql://localhost:8090/libreplan";
-//	private static final String USER_BDD = "username";
-//	private static final String PASSWORD_BDD = "password";
+	@FindBy(xpath="//span[@class='z-label']/..")
+	private WebElement green_frame;
+	
 	
 	//VERIFICATION : PageParticipant
 	public void checkPagePartipant() {
@@ -144,8 +142,6 @@ public class PageAffectCalendar {
 		 assertTrue(more_options_name.isDisplayed());
 		 assertTrue(filtered_name.isDisplayed());
 		 assertTrue(button_create.isDisplayed());
-	
-		 System.out.println("test ok");
 	}
 	
 	
@@ -190,11 +186,9 @@ public class PageAffectCalendar {
 	//ACTION : Renseigner les champs (Prénom, nom, ID)
 	public void basicInformation() {
 		
-		Utils.renseignerChamp(first_name, "Ghania");
-		
-		Utils.renseignerChamp(last_name, "BARA");
-				
-		Utils.renseignerChamp(ID, "gba");
+		Utils.renseignerChamp(first_name, "Jean");
+		Utils.renseignerChamp(last_name, "DU");		
+		Utils.renseignerChamp(ID, "jdu");
 	}
 	
 	
@@ -202,43 +196,46 @@ public class PageAffectCalendar {
 	public void createNewParticipant() {
 		
 		new_user_btn.click();
-		Utils.renseignerChamp(name_user, "gba");
-		Utils.renseignerChamp(password_user, "$gbamdp1");
-		Utils.renseignerChamp(confirmation_password_user, "$gbamdp1");
-		Utils.renseignerChamp(email_user, "gba@test.fr");
+		Utils.renseignerChamp(name_user, "jdu");
+		Utils.renseignerChamp(password_user, "$jdumdp1");
+		Utils.renseignerChamp(confirmation_password_user, "$jdumdp1");
+		Utils.renseignerChamp(email_user, "jdu@test.fr");
 		button_save.click();
 	}
 	
 	
 	//VERIFICATION : enregistrement nouveau participant
 	public void checkNewParticipantSave(WebDriver driver) {
+		
 		assertTrue(driver.findElement(By.xpath("//span[.='Participant enregistré']")).isDisplayed());
-		assertEquals("BARA", field_check_last_name.getText());
-		assertEquals("Ghania", field_check_first_name.getText());
-		assertEquals("gba", field_check_id.getText());
-		System.out.println("test new user ok");
+		assertEquals("DU", field_check_last_name.getText());
+		assertEquals("Jean", field_check_first_name.getText());
+		assertEquals("jdu", field_check_id.getText());
 	}
 	
 	
 	//ACTION : Accéder au formulaire de modification d'un participant
 	public void accessTheForm() {
+		
 		field_check_last_name.click();
 	}
 	
 	//VERIFICATION :check page modifier participant
-	
 	public void checkPageModifyParticipant(WebDriver driver) throws InterruptedException {
+		
 		Thread.sleep(1000);
-		assertEquals("Modifier le participant: Ghania BARA", driver.findElement(By.xpath("//td[substring(@id,5)='_6-cnt']")).getText());
-		assertEquals("Ghania", driver.findElement(By.xpath("//div[substring(@id,5)='o6-cell']/input")).getAttribute("value"));
-		assertEquals("BARA", driver.findElement(By.xpath("//div[substring(@id,5)='u6-cell']/input")).getAttribute("value"));
-		System.out.println("test modify participant ok");
+		assertEquals("Modifier le participant: Jean DU", driver.findElement(By.xpath("//td[substring(@id,5)='_6-cnt']")).getText());
+		assertEquals("Jean", driver.findElement(By.xpath("//div[substring(@id,5)='o6-cell']/input")).getAttribute("value"));
+		assertEquals("DU", driver.findElement(By.xpath("//div[substring(@id,5)='u6-cell']/input")).getAttribute("value"));
 	}
+	
 	
 	//ACTION : Accéder à l'onglet "Calendrier" 
 	public void accessTabCalendar() {
+		
 		tab_calendar.click();
 	}
+	
 	
 	//VERIFICATION : check l'onglet calendrier
 	public void checkLabCalendar(WebDriver driver) throws InterruptedException {
@@ -253,13 +250,14 @@ public class PageAffectCalendar {
 		assertTrue(button_save.isDisplayed());
 		assertTrue(button_save_continue.isDisplayed());
 		assertTrue(button_delete.isDisplayed());
-		System.out.println("check lab calendar ok");
 	}
+	
 	
 	//ACTION : Supprimer le calendrier affecté par défaut (1/2) 
 	public void removeDefaultCalendar() {
 		button_delete_calendar.click();
 	}
+	
 	
 	//VERIFICATION : check liste déroulante
     public void checkListDeroulante(WebDriver driver) throws InterruptedException {
@@ -267,11 +265,10 @@ public class PageAffectCalendar {
 	   assertEquals("Choisir un calendrier parent", driver.findElement(By.xpath("//span[@class='z-label' and text()='Choisir un calendrier parent']")).getText());
 	   assertTrue(driver.findElement(By.xpath("//i[@class='z-combobox']/i")).isDisplayed());
 	   assertEquals("Default", driver.findElement(By.xpath("//i[@class='z-combobox']/input")).getAttribute("value"));
-	   System.out.println("check liste deroulante ok");
    }
    	
+    
 	//ACTION : Supprimer le calendrier affecté par défaut (2/2)
-	
     public void selectCalendar(WebDriver driver)  throws InterruptedException{
 
     	assertTrue(driver.findElement(By.xpath("(//i[@class='z-combobox-btn'])[1]")).isDisplayed());
@@ -279,33 +276,41 @@ public class PageAffectCalendar {
 
 	    List<WebElement> listCalendar = driver.findElements(By.xpath("//tr[@class='z-comboitem z-comboitem-seld']/../tr"));
 	 	assertFalse(listCalendar.isEmpty());
-	 	System.out.println("Le nombre de calendrier est "+ listCalendar.size());
+	 	//System.out.println("Le nombre de calendrier est "+ listCalendar.size());
 	 	driver.findElement(By.xpath("//tr[@class='z-comboitem z-comboitem-seld']/../tr[1]/td[2]")).click();
 	 	
     	Thread.sleep(10);
     	driver.findElement(By.xpath("//td[.='Sauver et continuer']")).click();
-	 	System.out.println("le calendrier par defaut est supprimé et remplacé par un autre calendrier ok");
-	 	
 	}
+    
     
 	//VERIFICATION : check données personnelles
     public void checkPersonalData(WebDriver driver) {
+    	
     	assertTrue(driver.findElement(By.xpath("//span[@class='z-tab-text' and text()='Données personnelles']")).isDisplayed());
     	assertTrue(driver.findElement(By.xpath("//span[@class='z-label' and text()='Participant enregistré']")).isDisplayed());
-    	System.out.println("check données personnelles");
-    	
     }
+    
+    
+    public void checkGreenColor() {
+    	
+    	Utils.checkColor(green_frame, "#cceecc");
+    }
+    
     
     //ACTION : Vérifier l'affectation du calendrier :
     public void clicTabCalendar() {
+    	
     	tab_calendar.click();
     }
     
+    
     //VERIFICATION : onglet calendrier
-    public void checkTabCalendar(WebDriver driver) {
+    public void checkTabCalendar(WebDriver driver) { 
     	
     	assertEquals("Dérivé du calendrier Calendrier - Test 1", driver.findElement(By.xpath("//span[@class='z-label' and text()='Dérivé du calendrier Calendrier - Test 1']")).getText());
-    	System.out.println("calendrier affecté");
+      
     }
-    
+	
+	
 }
