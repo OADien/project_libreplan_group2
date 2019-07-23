@@ -1,5 +1,8 @@
 package com.eql.project_libreplan_group2;
 
+
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +14,7 @@ public class TestAffectCalendar {
 
 	WebDriver driver;
 	String browser = "chrome";
+	String str_test = "Calendrier - Test 2";
 	
 	@Before
 	public void setup(){
@@ -26,19 +30,14 @@ public class TestAffectCalendar {
 	}
 	
 	
-	@Test
 	
-	public void testPageCalendar() throws InterruptedException {
+	@Test
+	public void testPageAffectCalendar() throws SQLException, Exception {
 		
-		 //ACTION : connexiont à la l'application Profil Admin + accéder à la page d'administration des calendriers
-		 PageMain page_main = Utils.login(driver);		
-		 page_main.clickMenu(driver, "Ressources", "Participants");
-		 PageAffectCalendar page_affect_calendar = PageFactory.initElements(driver, PageAffectCalendar.class);
-		 
-		 //ACTION : 
-		 page_affect_calendar.checkPagePartipant();
-		 
-		 //ACTION : Accéder au formulaire de modification d'un participant
+	    PageMain page_main = Utils.login(driver);		
+	    page_main.clickMenu(driver, "Ressources", "Participants");
+	    PageAffectCalendar page_affect_calendar = PageFactory.initElements(driver, PageAffectCalendar.class);
+		page_affect_calendar.checkPagePartipant();
 		page_affect_calendar.clicButtonCreate();
 		page_affect_calendar.verificationConformite(driver);
 		page_affect_calendar.basicInformation();
@@ -50,6 +49,9 @@ public class TestAffectCalendar {
 		page_affect_calendar.checkLabCalendar(driver);
 		page_affect_calendar.removeDefaultCalendar();
 		page_affect_calendar.checkListDeroulante(driver);
-		
+		page_affect_calendar.selectCalendar(driver);
+		page_affect_calendar.checkPersonalData(driver);
+		page_affect_calendar.clicTabCalendar();
+		page_affect_calendar.checkTabCalendar(driver);
     }
 }

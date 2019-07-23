@@ -4,10 +4,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
 
 public class PageAffectCalendar {
@@ -116,6 +119,11 @@ public class PageAffectCalendar {
 	@FindBy(xpath="(//td[.='Annuler'])[3]")
 	private WebElement button_delete;
 
+//	private static final String DRIVER = "com.mysql.jdbc.Driver";
+//	private static final String JDBC_URL_BDD = "jdbc:mysql://localhost:8090/libreplan";
+//	private static final String USER_BDD = "username";
+//	private static final String PASSWORD_BDD = "password";
+	
 	//VERIFICATION : PageParticipant
 	public void checkPagePartipant() {
 		//VERIFICATION : le titre de la page
@@ -258,7 +266,46 @@ public class PageAffectCalendar {
     	Thread.sleep(1000);
 	   assertEquals("Choisir un calendrier parent", driver.findElement(By.xpath("//span[@class='z-label' and text()='Choisir un calendrier parent']")).getText());
 	   assertTrue(driver.findElement(By.xpath("//i[@class='z-combobox']/i")).isDisplayed());
+	   assertEquals("Default", driver.findElement(By.xpath("//i[@class='z-combobox']/input")).getAttribute("value"));
 	   System.out.println("check liste deroulante ok");
-	 
    }
+   	
+	//ACTION : Supprimer le calendrier affecté par défaut (2/2)
+	
+    public void selectCalendar(WebDriver driver)  throws InterruptedException{
+
+    	assertTrue(driver.findElement(By.xpath("(//i[@class='z-combobox-btn'])[1]")).isDisplayed());
+    	driver.findElement(By.xpath("(//i[@class='z-combobox-btn'])[1]")).click();
+
+	    List<WebElement> listCalendar = driver.findElements(By.xpath("//tr[@class='z-comboitem z-comboitem-seld']/../tr"));
+	 	assertFalse(listCalendar.isEmpty());
+	 	System.out.println("Le nombre de calendrier est "+ listCalendar.size());
+	 	driver.findElement(By.xpath("//tr[@class='z-comboitem z-comboitem-seld']/../tr[1]/td[2]")).click();
+	 	
+    	Thread.sleep(10);
+    	driver.findElement(By.xpath("//td[.='Sauver et continuer']")).click();
+	 	System.out.println("le calendrier par defaut est supprimé et remplacé par un autre calendrier ok");
+	 	
+	}
+    
+	//VERIFICATION : check données personnelles
+    public void checkPersonalData(WebDriver driver) {
+    	assertTrue(driver.findElement(By.xpath("//span[@class='z-tab-text' and text()='Données personnelles']")).isDisplayed());
+    	assertTrue(driver.findElement(By.xpath("//span[@class='z-label' and text()='Participant enregistré']")).isDisplayed());
+    	System.out.println("check données personnelles");
+    	
+    }
+    
+    //ACTION : Vérifier l'affectation du calendrier :
+    public void clicTabCalendar() {
+    	tab_calendar.click();
+    }
+    
+    //VERIFICATION : onglet calendrier
+    public void checkTabCalendar(WebDriver driver) {
+    	
+    	assertEquals("Dérivé du calendrier Calendrier - Test 1", driver.findElement(By.xpath("//span[@class='z-label' and text()='Dérivé du calendrier Calendrier - Test 1']")).getText());
+    	System.out.println("calendrier affecté");
+    }
+    
 }
