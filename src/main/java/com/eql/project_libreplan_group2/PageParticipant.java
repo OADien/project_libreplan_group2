@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class PageParticipant {
+public class PageParticipant  extends BasePage{
 	
 	@FindBy(xpath="//a[@href=\"/libreplan/resources/worker/worker.zul\"]")
 	private WebElement participant;

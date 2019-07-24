@@ -16,7 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class PageTimeSheet {
+public class PageTimeSheet extends BasePage {
 
 	@FindBy(xpath = "(//option[text()='Default'])[3]/parent::select")
 	private WebElement menu_modele;

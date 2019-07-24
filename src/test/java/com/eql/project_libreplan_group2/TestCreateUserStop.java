@@ -30,7 +30,7 @@ public class TestCreateUserStop {
 		PageMain pageMain = Utils.login(driver);
 		pageMain.clickMenu(driver, "Ressources", "Participants");
 		PageCreate pageCreate = PageFactory.initElements(driver, PageCreate.class);
-		pageCreate.creation();
+		pageCreate.creation(driver);
 		pageCreate.verificationConformite(driver);
 		
 	//Creation utilisateur vide

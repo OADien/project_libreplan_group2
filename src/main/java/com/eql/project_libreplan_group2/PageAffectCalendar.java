@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 
-public class PageAffectCalendar {
+public class PageAffectCalendar extends BasePage {
 	
 	@FindBy(xpath="//div[substring(@id,5)='j4-cap']")
 	private WebElement title_page;

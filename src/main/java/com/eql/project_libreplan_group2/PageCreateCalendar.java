@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy;
 
 
 
-public class PageCreateCalendar{
+public class PageCreateCalendar extends BasePage{
 	
 	@FindBy(xpath = ("(//td[@class='z-button-cm' and text()='Créer'])[1]")) private WebElement button_create;
 	@FindBy(xpath = ("//input[@class='z-textbox']")) private WebElement field_name;

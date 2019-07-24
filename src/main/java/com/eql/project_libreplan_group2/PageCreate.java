@@ -14,7 +14,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
-public class PageCreate {
+public class PageCreate  extends BasePage{
 	
 	@FindBy(xpath="//div[contains(@class,'z-groupbox-hl')]")
 	private WebElement blue_frame;
