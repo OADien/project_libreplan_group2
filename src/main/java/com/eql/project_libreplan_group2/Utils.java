@@ -126,4 +126,10 @@ public class Utils {
 		select.selectByValue(option);
 	}
 	
+	public static int putStringToInt(String number) {
+		Integer result = Integer.parseInt(number);	
+		return result;
+	}
+	
 }
+

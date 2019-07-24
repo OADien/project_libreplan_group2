@@ -2,8 +2,12 @@ package com.eql.project_libreplan_group2;
 
 import static org.junit.Assert.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,132 +25,105 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class TestCreerFeuilleDeTemps {
 
 	private WebDriver driver;
-	String type_heures="Default";
+	String modele="Overtime";
+	
 
 	@Before
 		public void init() throws Exception {
-		Utils.insertData("src\\main\\resources\\datasets\\insert_resource.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_worker.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_order_element.xml");
-		Utils.insertData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_resource.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_worker.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_order_element.xml");
+//		Utils.insertData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
 		driver = Utils.chooseBrowser("chrome");
 	}
 
 	@After
 	public void quit() throws Exception {
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_resource.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_worker.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_order_element.xml");
-		Utils.deleteAllData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_resource.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_worker.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\delete_order_element.xml");
+//		Utils.deleteAllData("src\\main\\resources\\datasets\\insert_order_line_group.xml");
 		//driver.quit();
+		driver.findElement(By.xpath("(//img[@src='/libreplan/common/img/ico_borrar1.png'])[1]")).click();
+		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='OK']")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("(//img[@src='/libreplan/common/img/ico_borrar1.png'])[1]")).click();
+		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='OK']")).click();
 	}
 
 	@Test
-	public void test_creer_feuille_de_temps() throws InterruptedException {
+	public void test_creer_feuille_de_temps() throws InterruptedException, ParseException, Exception {
 		
 		//ACTION :  Accéder à la page de gestion des feuilles de temps
 		PageMain pageMain = Utils.login(driver);
 		pageMain.clickMenu(driver, "Coût", "Feuille de temps");
 		PageTimeSheet page_time_sheet = PageFactory.initElements(driver, PageTimeSheet.class);
 		
-		
 		//VERIFICATION :  apparition du tableau
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Date de début')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Date de fin')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Modèle')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Travail total')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Code')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt'][contains(.,'Actions')]")).isDisplayed());
-		
+		page_time_sheet.verifApparitionTableau(driver);
 		
 		//VERIFICATION :  présence d'une liste déroulante, de deux champs à remplir et du bouton filtre
-		assertTrue(driver.findElement(By.xpath("//select[contains(.,'Montrer tout')]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//i[@class='z-datebox'][1]/input[1]")).isDisplayed());
-		System.out.println("Vérification liste déroulante");
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Filtre']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("(//select[contains(.,'Default')])[2]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Nouvelle feuille de temps']")).isDisplayed());
-		
-		
-		
+		page_time_sheet.verifListeDeroulante(driver);
 		
 		//ACTION :  Créer une feuille de temps - Accès au formulaire de création :
 		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Nouvelle feuille de temps']")).click();
 		
 		//VERIFICATION : Affichage de la page "Créer la feuille de temps"
-		//Ajout du Thread.sleep sinon le test est FAIL
-		Thread.sleep(1000);
-		assertEquals("Données générales", driver.findElement(By.xpath("//span[text()='Données générales']")).getText());
-		assertTrue(driver.findElement(By.xpath("//input[@type='checkbox']")).isSelected());
-		assertFalse(driver.findElement(By.xpath("//input[@class='z-textbox z-textbox-disd z-textbox-text-disd']")).getAttribute("disabled").isEmpty());
-		assertEquals("Champs Rubriques", driver.findElement(By.xpath("//span[text()='Champs Rubriques']")).getText());
-		List<WebElement> input = driver.findElements(By.xpath("(//fieldset[@class='z-fieldset'])[2]/descendant::input"));
-		boolean visible=false;
-		for (WebElement element:input) {
-			visible = element.isDisplayed();
-			if (visible)
-				break;
-		}
-		assertFalse(visible);
-		List<WebElement> tableau1 = driver.findElements(By.xpath("(//tr[@class='z-columns'])[6]/descendant::tr"));
-		boolean visible2=false;
-		for (WebElement element:tableau1) {
-			visible2 = element.isDisplayed();
-			if (visible2)
-				break;
-		}
-		assertFalse(visible2);
-		
-		assertEquals("Lignes de feuille de temps", driver.findElement(By.xpath("//span[text()='Lignes de feuille de temps']")).getText());
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Ajouter une ligne']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt' and text()='Date']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt' and text()='Ressource']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt' and text()='Tâche']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//div[@class='z-column-cnt' and text()='Heures']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[19]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[20]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[21]")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[22]")).isDisplayed());
-		
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Enregistrer']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Sauver et continuer']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Sauvegarder & Nouvelle feuille de temps']")).isDisplayed());
-		assertTrue(driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Annuler']")).isDisplayed());
-	
-		
-
-
-	
+		page_time_sheet.verifaffichagePageCreerFeuilleDeTemps(driver);
 		
 		//ACTION : Ajouter une ligne de feuille de temps
 		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Ajouter une ligne']")).click();
-		driver.findElement(By.xpath("(//i[@class='z-datebox-btn'])[5]")).click();
-		driver.findElement(By.xpath("(//td[@class='z-calendar-wkday' and text()='22'])[5]")).click();
-		driver.findElement(By.xpath("(//i[@class='z-combobox-btn'])[2]")).click();
-		driver.findElement(By.xpath("(//td[@class='z-comboitem-text'])[1]")).click();
-		driver.findElement(By.xpath("(//i[@class='z-bandbox-btn'])[3]")).click();
-		driver.findElement(By.xpath("(//div[@class='z-listcell-cnt z-overflow-hidden'])[5]")).click();
-		WebElement heures = driver.findElement(By.xpath("//input[@class='z-textbox']"));
-		heures.clear();
-		heures.sendKeys("8");
-		page_time_sheet.selectTypeHeures(type_heures);
-		driver.findElement(By.xpath("(//input[@type='checkbox'])[2]")).click();
-		driver.findElement(By.xpath("(//td[@class='z-button-cm' and text()='Enregistrer']")).click();
 		
-		
+		//VERIFICATION : Affichage des éléments du bloc
+		page_time_sheet.verifAffichageBloc(driver);
 		
 		//ACTION : Ajouter une feuille de temps - bouton [Enregistrer] :
+		page_time_sheet.actionAjouterFeuilleDeTemps(driver);
+				
+		//VERIFICATION : Affichage de la ligne correspondant à la feuille de temps créée sur la page "liste des feuilles de temps"
+		page_time_sheet.verifAffichageLigneFeuilleDeTemps(driver);		
 		
+		//ACTION : création d'une deuxième feuille de temps pour faire les steps suivants : 
 		
-		//ACTION : Tri du tableau des feuilles de temps - tri par défaut :
+		pageMain.clickMenu(driver, "Coût", "Feuille de temps");
+		page_time_sheet.actionCreationDeuxiemeFeuilleDeTemps(driver);
+		page_time_sheet.selectModele(modele);
+		WebElement heures2 = driver.findElement(By.xpath("//input[@class='z-textbox']"));
+		heures2.clear();
+		heures2.sendKeys("9");
+		driver.findElement(By.xpath("//td[@class='z-button-cm' and text()='Enregistrer']")).click();
+		
 		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Date de fin" (1/2) :
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[2]")).click();
+		
+		//VERIFICATION : tri croissant date de fin
+		page_time_sheet.verifTriCroissantDateDeFin(driver);
+		
 		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Date de fin" (2/2) :
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[2]")).click();
+		
+		//VERIFICATION : tri décroissant date de fin
+		page_time_sheet.verifTriDecroissantDateDeFin(driver);
+		
 		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Travail total" (1/2) :
+		
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[4]")).click();
+		
+		//VERIFICATION : tri croissant par colonne "Travail total"
+	
+		page_time_sheet.verifTriCroissantTravailTotal(driver);
+		
 		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Travail total" (2/2) :
-		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Modèle" (1/2) :
-		//ACTION : Tri du tableau des feuilles de temps - tri par colonne "Modèle" (1/2) :
-		//ACTION : Redimensionner la taille des colonnes (1/2) :
-		//ACTION : Redimensionner la taille des colonnes (1/2) :
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("(//div[@class='z-column-cnt'])[4]")).click();
+
+		//VERIFICATION : tri décroissant par colonne "Travail total"
+		page_time_sheet.verifTriDecroissantTravailTotal(driver);
+
+	
 		
 	}
 	
