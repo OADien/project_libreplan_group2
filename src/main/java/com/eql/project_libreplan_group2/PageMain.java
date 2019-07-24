@@ -110,12 +110,54 @@ public class PageMain extends BasePage {
 	@FindBy(xpath="//span[contains(@class, 'back-button')]")
 	private WebElement buttonTaskReturn;
 	
+	@FindBy(xpath="//span[@title='Imprimer']")
+	private WebElement buttonPrint;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]")
+	private WebElement printPopup;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::div[contains(@class, 'z-window-modal-header')][1]")
+	private WebElement printPopupTitle;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::fieldset/legend")
+	private WebElement printPopupSectionTitle;
+	
+	@FindBy(xpath="//label[.='Afficher les libellés'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxDisplayLabels;
+	
+	@FindBy(xpath="//label[.='Montrer les affectations de ressource'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxShowResourcesAllocation;
+	
+	@FindBy(xpath="//label[.='Etendre les groupes de tâches'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxExpandTaskGroup;
+	
+	@FindBy(xpath="//label[.='Afficher l'avancement'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxShowProgression;
+	
+	@FindBy(xpath="//label[.='Afficher toutes les heures rapportées'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxShowReportedHours;
+	
+	@FindBy(xpath="//label[.='Afficher la barre de coût monétaire'][1]/preceding-sibling::input[@type='checkbox'][1]")
+	private WebElement checkboxShowCostBar;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::span[@class='z-label']")
+	private WebElement printPoupReminder;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::span[contains(@class, 'save-button')]")
+	private WebElement printPopupPrintButton;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::span[contains(@class, 'cancel-button')]")
+	private WebElement printPopupCancelButton;
+	
+	@FindBy(xpath="/html/body/div[contains(@class, 'z-window-modal z-window-modal-shadow')]/descendant::fieldset/descendant::input[@type='checkbox']")
+	private List<WebElement> printPopupExportOptions;
+	
 //	@FindBy(xpath="//div[contains(@class, 'orderelements-tab')]/descendant::td[.='Ajouter'][2]")
 //	private WebElement 
 //	
 //	
 	public void clickMenu(WebDriver driver, String title, String subtitle) {
-		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,'"+ title.trim()+"')]/.."));
+		WebElement section = driver.findElement(By.xpath("//*[contains(@class,'mainmenu')]/descendant::button[contains(.,\""+ title.trim()+"\")]/.."));
 		
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		Actions actions = new Actions(driver);
@@ -123,7 +165,7 @@ public class PageMain extends BasePage {
 		actions.build().perform();
 		
 		Actions actions2 = new Actions(driver);
-		actions2.moveToElement(wait.until(ExpectedConditions.visibilityOf(section.findElement(By.xpath("//div[contains(@class, 'submenu')]/ul/li/descendant::a[contains(., '"+subtitle+"')]")))));
+		actions2.moveToElement(wait.until(ExpectedConditions.visibilityOf(section.findElement(By.xpath("//div[contains(@class, 'submenu')]/ul/li/descendant::a[contains(., \""+subtitle+"\")]")))));
 		actions2.click();
 		actions2.build().perform();
 	}
@@ -319,6 +361,49 @@ public class PageMain extends BasePage {
 		}
 		
 		buttonTaskReturn.click();
+	}
+	
+	public void print() {
+		buttonPrint.click();
+		Assert.assertTrue(printPopup.isDisplayed());
+		Assert.assertEquals("Imprimer la configuration", printPopupTitle.getText().trim());
+		Assert.assertEquals("Options d'export", printPopupSectionTitle.getText().trim());
+		Assert.assertTrue(checkboxDisplayLabels.isDisplayed());
+		Assert.assertTrue(checkboxDisplayLabels.isSelected());
+		Assert.assertTrue(checkboxExpandTaskGroup.isDisplayed());
+		Assert.assertTrue(checkboxExpandTaskGroup.isSelected());
+		Assert.assertTrue(checkboxShowCostBar.isDisplayed());
+		Assert.assertTrue(checkboxShowCostBar.isSelected());
+		Assert.assertTrue(checkboxShowProgression.isDisplayed());
+		Assert.assertTrue(checkboxShowProgression.isSelected());
+		Assert.assertTrue(checkboxShowReportedHours.isDisplayed());
+		Assert.assertTrue(checkboxShowReportedHours.isSelected());
+		Assert.assertTrue(checkboxShowResourcesAllocation.isDisplayed());
+		Assert.assertTrue(checkboxShowResourcesAllocation.isSelected());
+		Assert.assertEquals("Merci de vous rappeler que seules les modifications enregistrées seront affichées", printPoupReminder.getText().trim());
+		Assert.assertTrue(printPopupPrintButton.isDisplayed());
+		Assert.assertTrue(printPopupCancelButton.isDisplayed());
+	}
+	
+	public void cancelPrint() {
+		printPopupCancelButton.click();
+		try {
+			Assert.assertFalse(printPopup.isDisplayed());
+		}catch(Exception e) {
+			System.out.println("La fenêtre modale d'impression est fermée");
+		}
+	}
+	
+	public void clickOnPrint() {
+		buttonPrint.click();
+	}
+	
+	public void uncheckAllExportOptionsAndPrint() {
+		for(WebElement exportOption: printPopupExportOptions) {
+			if(exportOption.isSelected())
+				exportOption.click();
+		}
+		printPopupPrintButton.click();
 	}
 
 }
