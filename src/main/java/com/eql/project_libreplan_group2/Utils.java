@@ -76,6 +76,20 @@ public class Utils {
 		return code.isSelected();
     }
 
+	public static void checkColor(WebElement msgBox, String couleurHexminuscule) {
+		System.out.println(msgBox.getText());
+		String rgbCode = msgBox.getCssValue("Background").substring(0, 18);
+		//System.out.println(rgbCode);
+		String[] numbers = rgbCode.replace("rgb(", "").replace(")", "").split(",");
+		int r = Integer.parseInt(numbers[0].trim());
+		int g = Integer.parseInt(numbers[1].trim());
+		int b = Integer.parseInt(numbers[2].trim());
+		//System.out.println("r: " + r + "g: " + g + "b: " + b);
+		String hex = "#" + Integer.toHexString(r) + Integer.toHexString(g) + Integer.toHexString(b);
+		//System.out.println(hex);
+		assertTrue("[FAIL] Pas la bonne couleur", couleurHexminuscule.equals(hex));
+	}
+
 	private static IDataSet readDataSet (String filename) throws Exception{
 		return new FlatXmlDataSetBuilder().build(new File(filename));
 		}
