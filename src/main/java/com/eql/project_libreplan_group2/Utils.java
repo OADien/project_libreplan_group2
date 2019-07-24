@@ -11,6 +11,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -87,7 +88,7 @@ public class Utils {
 		//System.out.println("r: " + r + "g: " + g + "b: " + b);
 		String hex = "#" + Integer.toHexString(r) + Integer.toHexString(g) + Integer.toHexString(b);
 		//System.out.println(hex);
-		assertTrue("[FAIL] Pas la bonne couleur", couleurHexminuscule.equals(hex));
+		Assert.assertTrue("[FAIL] Pas la bonne couleur", couleurHexminuscule.equals(hex));
 	}
 
 	private static IDataSet readDataSet (String filename) throws Exception{
